@@ -7,7 +7,7 @@
 #ifndef _set_h
 #define _set_h
 
-#define SIZE (sizeof(unsigned long int)*8);
+#define SIZE (sizeof(unsigned long int)*8)
 #include <stdbool.h>
 
 struct SET 
@@ -24,6 +24,5 @@ extern bool Set_in(Set this, int x);
 extern void Set_remove(Set this, int x);
 extern void Set_union(Set this, Set other);
 extern bool Set_equals(Set this, Set other);
-
 
 #endif
