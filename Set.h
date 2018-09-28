@@ -18,11 +18,11 @@ struct SET
 typedef struct SET* Set;
 
 extern Set new_Set(void);
-extern void free_Set(Set this);
-extern void Set_insert(Set this, int x);
-extern bool Set_in(Set this, int x);
-extern void Set_remove(Set this, int x);
-extern void Set_union(Set this, Set other);
-extern bool Set_equals(Set this, Set other);
+extern void free_Set(Set set);
+extern void Set_insert(Set set, int x);
+extern bool Set_in(Set set, int x);
+extern void Set_remove(Set set, int x);
+extern void Set_union(Set set, Set other);
+extern bool Set_equals(Set set, Set other);
 
 #endif
