@@ -74,6 +74,11 @@ extern void NFA_set_accepting(NFA nfa, int state, bool value);
 extern bool NFA_get_accepting(NFA nfa, int state);
 
 /**
+ * Remove epsilon transitions
+ */
+extern NFA NFA_removeEpsilon(NFA nfa);
+
+/**
  * Run the given NFA on the given input string, and return true if it accepts
  * the input, otherwise false.
  */
