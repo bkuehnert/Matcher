@@ -47,3 +47,15 @@ bool Set_equals(Set this, Set other)
 {
 	return this->data == other->data;
 }
+
+bool Set_contains(Set big, Set small)
+{
+	for(int i=0; i<SIZE; i++)
+		if(!Set_in(big,i) && Set_in(small, i)) return false;
+	return true;
+}
+
+bool Set_isEmpty(Set set)
+{
+	return set->data!=0L;
+}
