@@ -1,7 +1,7 @@
 /*
  * Author: Ben Kuehnert
  *
- * Epsilon-less NFA.
+ * NFA (epsilon-less or not);
  */
 
 #ifndef _nfa_h
@@ -15,6 +15,7 @@ struct _NFA {
 	Set cur_states;
 	Set** trans_table;
 	bool* accept_table;
+	bool epsilon;
 };
 
 typedef struct _NFA* NFA;
