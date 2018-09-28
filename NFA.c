@@ -128,17 +128,47 @@ void closureSearch(NFA nfa, bool* seen, Set* closure, int state)
 NFA
 NFA_removeEpsilon(NFA nfa)
 {
+	//seen array for DFS
+	bool* seen = (bool*)calloc(nfa->num_states,sizeof(bool));
+
 	//First compute epsilon-closure of the nfa
 	Set* closure = (Set*)malloc(nfa->num_states*sizeof(Set));
 	for (int i = 0; i<nfa->num_states; i++) closure[i] = new_Set(); 
 
-	bool* seen = (bool*)calloc(nfa->num_states,sizeof(bool));
-
 	for (int i = 0; i<nfa->num_states; i++) {
 		closureSearch(nfa, seen, closure, i);
 	}
+	free(seen);
 
-	
+	//array for tracking important states
+	Set important = new_Set();
+	Set_insert(important, 0);
+	for(int i =0; i<nfa->num_states; i++)
+		for(int j = 1; j<128; j++)
+			if(Set_nonEmpty(nfa->trans_table[i][j]))
+				Set_union(important, nfa->trans_table[i][j]);
+
+	printf("important states: ");
+	Set_print(important);
+
+	NFA ret = new_NFA(nfa->num_states, "");
+
+	for(int i = 0; i<SIZE; i++) {
+		if(Set_in(important,i)) {
+			for(int j = 0; j < SIZE; j++) {
+				if(Set_in(closure[i],j) && i!=j) {
+					for(int k = 1; k<128; k++)
+						Set_union(ret->trans_table[i][k], nfa->trans_table[j][k]);
+					if(nfa->accept_table[j]) ret->accept_table[i] = true;
+				}
+			}
+		}
+	}
+	free_Set(important);
+	for(int i = 0; i<nfa->num_states; i++) free_Set(closure[i]);
+	free(closure);
+
+	return ret;	
 
 }
 
