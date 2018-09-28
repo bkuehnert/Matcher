@@ -25,6 +25,9 @@ extern void Set_remove(Set set, int x);
 extern void Set_union(Set set, Set other);
 extern bool Set_equals(Set set, Set other);
 extern bool Set_contains(Set big, Set small);
-extern bool Set_isEmpty(Set set);
+extern bool Set_nonEmpty(Set set);
+extern void Set_incr(Set set, int incr);
+
+extern void Set_print(Set set);
 
 #endif

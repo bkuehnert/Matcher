@@ -55,7 +55,23 @@ bool Set_contains(Set big, Set small)
 	return true;
 }
 
-bool Set_isEmpty(Set set)
+void Set_incr(Set set, int incr)
+{
+	set->data = set->data<<incr;
+}
+
+bool Set_nonEmpty(Set set)
 {
 	return set->data!=0L;
+}
+
+void Set_print(Set set)
+{
+	printf("{");
+	for(int i=0;i<SIZE; i++)
+	{
+		if(Set_in(set, i))
+			printf("%d, ",i);
+	}
+	printf("}\n");
 }
