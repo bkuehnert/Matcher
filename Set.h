@@ -27,6 +27,7 @@ extern bool Set_equals(Set set, Set other);
 extern bool Set_contains(Set big, Set small);
 extern bool Set_nonEmpty(Set set);
 extern void Set_incr(Set set, int incr);
+extern int Set_size(Set set);
 
 extern void Set_print(Set set);
 
