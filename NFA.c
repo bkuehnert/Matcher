@@ -23,9 +23,9 @@ new_NFA(int nstates, char* desc)
 	memleft(this->trans_table);	
 	for (int i = 0; i<nstates; i++)
 	{
-		this->trans_table[i] = (Set*)malloc(128*sizeof(Set));
+		this->trans_table[i] = (Set*)malloc(129*sizeof(Set));
 		memleft(this->trans_table[i]);
-		for (int j = 0; j<128; j++)
+		for (int j = 0; j<129; j++)
 		{
 			this->trans_table[i][j] = new_Set();
 		}
@@ -41,7 +41,7 @@ NFA_free(NFA nfa)
 	free_Set(nfa->cur_states);
 	free(nfa->accept_table);
 	for ( int i = 0; i < nfa->num_states; i++ ){
-		for ( int j = 0; j < 128; j++ )
+		for ( int j = 0; j < 129; j++ )
 			free_Set(nfa->trans_table[i][j]);
 		free(nfa->trans_table[i]);
 	}
