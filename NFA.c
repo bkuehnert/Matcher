@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 #include "NFA.h"
 #include "Set.h"
 
@@ -107,6 +108,42 @@ NFA_get_accepting(NFA nfa, int state)
 	return nfa->accept_table[state];
 }
 
+void closureSearch(NFA nfa, bool* seen, Set* closure, int state)
+{
+	if(seen[state]) return;
+	printf("Computing closure for %d\n",state);
+	for (int i=0; i<SIZE; i++) {
+		if(Set_in(nfa->trans_table[state][0],i) && i!=state){
+			closureSearch(nfa,seen,closure,i);
+			Set_union(closure[state], closure[i]);	
+		}
+	}
+	Set_insert(closure[state],state);
+	printf("Set: %d: ", state);
+	Set_print(closure[state]);
+	seen[state] = true;
+
+}
+
+NFA
+NFA_removeEpsilon(NFA nfa)
+{
+	//First compute epsilon-closure of the nfa
+	Set* closure = (Set*)malloc(nfa->num_states*sizeof(Set));
+	for (int i = 0; i<nfa->num_states; i++) closure[i] = new_Set(); 
+
+	bool* seen = (bool*)calloc(nfa->num_states,sizeof(bool));
+
+	for (int i = 0; i<nfa->num_states; i++) {
+		closureSearch(nfa, seen, closure, i);
+	}
+
+	
+
+}
+
+
+
 //experimental
 bool
 NFA_execute(NFA nfa, char *input)
@@ -128,6 +165,25 @@ NFA_execute(NFA nfa, char *input)
 				return true;
 
 	return false;
+}
+
+void
+NFA_print(NFA nfa)
+{
+	printf("This is an NFA that %s\n", nfa->description);
+	for(int i = 0; i<nfa->num_states; i++)
+	{
+		printf("State %d %s:\n",i, nfa->accept_table[i] ? "(accepting)" : "");
+		for(int j = 0; j<128; j++)
+		{
+			if(Set_nonEmpty(nfa->trans_table[i][j])) {
+				if(j==0) printf("\t eps :---> ");
+				else printf("\t %c :---> ",(char)j);
+				Set_print(nfa->trans_table[i][j]);
+			}
+		}
+	}
+
 }
 
 void
