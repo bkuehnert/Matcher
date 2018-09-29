@@ -28,8 +28,6 @@ NFA create_Concat(NFA a, NFA b)
 		}		
 	}
 	NFA_set_accepting(ret, new_size-1, true);
-	NFA_free(a);
-	NFA_free(b);
 	return ret;
 }
 
@@ -54,8 +52,6 @@ NFA create_Union(NFA a, NFA b)
 		}
 	}
 	NFA_set_accepting(ret, new_size-1, true);
-	NFA_free(a);
-	NFA_free(b);
 	return ret;
 }
 
@@ -74,6 +70,5 @@ NFA create_Closure(NFA a)
 		}
 	}
 	NFA_set_accepting(ret, new_size-1, true);
-	NFA_free(a);
 	return ret;
 }
