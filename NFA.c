@@ -111,7 +111,7 @@ NFA_get_accepting(NFA nfa, int state)
 void closureSearch(NFA nfa, bool* seen, Set* closure, int state)
 {
 	if(seen[state]) return;
-	printf("Computing closure for %d\n",state);
+	//printf("Computing closure for %d\n",state);
 	for (int i=0; i<SIZE; i++) {
 		if(Set_in(nfa->trans_table[state][0],i) && i!=state){
 			closureSearch(nfa,seen,closure,i);
@@ -119,8 +119,8 @@ void closureSearch(NFA nfa, bool* seen, Set* closure, int state)
 		}
 	}
 	Set_insert(closure[state],state);
-	printf("Set: %d: ", state);
-	Set_print(closure[state]);
+	//printf("Set: %d: ", state);
+	//Set_print(closure[state]);
 	seen[state] = true;
 
 }
@@ -148,9 +148,6 @@ NFA_removeEpsilon(NFA nfa)
 			if(Set_nonEmpty(nfa->trans_table[i][j]))
 				Set_union(important, nfa->trans_table[i][j]);
 
-	printf("important states: ");
-	Set_print(important);
-
 	NFA ret = new_NFA(nfa->num_states, "");
 
 	for(int i = 0; i<SIZE; i++) {
@@ -164,11 +161,35 @@ NFA_removeEpsilon(NFA nfa)
 			}
 		}
 	}
+	
+	//compress this NFA, get rid of useless states
+	int index = 0;
+	int* map = (int*)calloc(nfa->num_states,sizeof(int));
+	for(int i = 0; i<nfa->num_states; i++)
+		if(Set_in(important,i)){
+			map[i] = index++;
+		}
+
+	NFA compressed = new_NFA(Set_size(important),"");
+
+	for(int i = 0; i<nfa->num_states; i++){
+		for(int j = 1; j<128; j++)
+			for(int k = 0; k<SIZE; k++)
+				if(Set_in(ret->trans_table[i][j],k))
+					Set_insert(compressed->trans_table[map[i]][j],map[k]);
+		if(ret->accept_table[i]) compressed->accept_table[map[i]]=true;
+	}
+
 	free_Set(important);
+	free(map);
 	for(int i = 0; i<nfa->num_states; i++) free_Set(closure[i]);
 	free(closure);
 
-	return ret;	
+
+	NFA_free(ret);
+	NFA_free(nfa);
+
+	return compressed;
 
 }
 
