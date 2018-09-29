@@ -58,3 +58,22 @@ NFA create_Union(NFA a, NFA b)
 	NFA_free(b);
 	return ret;
 }
+
+NFA create_Closure(NFA a)
+{
+	int new_size = a->num_states + 2;
+	NFA ret = new_NFA(new_size, "");
+	NFA_add_transition(ret, 0, 0, 1);
+	NFA_add_transition(ret, 0, 0, new_size - 1);
+	NFA_add_transition(ret, a->num_states, 0, 1);
+	NFA_add_transition(ret, a->num_states, 0, new_size-1);
+	for (int i = 1; i<new_size-1; i++) {
+		for (int j = 0; j<128; j++) {
+			Set_incr(a->trans_table[i-1][j],1);
+			Set_union(ret->trans_table[i][j], a->trans_table[i-1][j]);
+		}
+	}
+	NFA_set_accepting(ret, new_size-1, true);
+	NFA_free(a);
+	return ret;
+}
