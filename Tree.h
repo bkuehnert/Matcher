@@ -17,14 +17,9 @@ struct TREE_NODE
 	char c;
 };
 
-struct TREE
-{
-	struct TREE_NODE* root;
-};
+typedef struct TREE_NODE* Node;
 
-typedef struct TREE_NODE* tr_Node;
-typedef struct TREE* Tree;
-
-extern tr_Node new_tr_Node(bool terminal, char c);
+extern Node new_Node(bool terminal, char c);
+extern void Node_addChild(Node parent, bool terminal, char c);
 
 #endif
