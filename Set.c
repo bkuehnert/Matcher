@@ -18,7 +18,6 @@ void free_Set(Set this)
 void Set_insert(Set this, int x)
 {
 	if (x<0 || x>=SIZE) {
-		printf("Input %d out of range (%d).\n", x, SIZE);
 		return;
 	}
 	this->data |= (1L << x);
@@ -27,7 +26,6 @@ void Set_insert(Set this, int x)
 bool Set_in(Set this, int x)
 {
 	if (x<0 || x>=SIZE) {
-		printf("Input %d out of range (%d).\n", x, SIZE);
 		return 0;
 	}
 	return this->data & (1L<<x);
