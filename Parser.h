@@ -7,16 +7,15 @@
 #include <stdbool.h>
 #include "Tree.h"
 
-extern bool match(char* s, const char *token);
+extern bool match(char** s, char token);
 
-extern bool Regex(char* s, tr_Node parent);
-extern bool Atom(char* s, tr_Node parent);
-extern bool Union(char* s, tr_Node parent);
-extern bool Concat(char* s, tr_Node parent);
-extern bool Closure(char* s, tr_Node parent);
-extern bool ParenRegex(char* s, tr_Node parent);
-extern bool LeftParen(char* s, tr_Node parent);
-extern bool RightParen(char* s, tr_Node parent);
+extern bool R(char** s);
+extern bool T(char** s);
+extern bool F(char** s);
+extern bool C(char** s);
+extern bool B(char** s);
+extern bool S(char** s);
 
+extern bool wrap(char** s);
 
 #endif
