@@ -11,8 +11,8 @@
 
 struct TREE_NODE
 {
-	struct TREE_NODE* left;
-	struct TREE_NODE* right;
+	struct TREE_NODE** children;
+	int num_children;
 	bool terminal;
 	char c;
 };
@@ -20,6 +20,6 @@ struct TREE_NODE
 typedef struct TREE_NODE* Node;
 
 extern Node new_Node(bool terminal, char c);
-extern void Node_addChild(Node parent, bool terminal, char c);
+extern void Node_addNewChild(Node parent, bool terminal, char c);
 
 #endif
