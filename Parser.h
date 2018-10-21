@@ -9,13 +9,12 @@
 
 extern bool match(char** s, char token);
 
-extern bool R(char** s);
-extern bool T(char** s);
-extern bool F(char** s);
-extern bool C(char** s);
-extern bool B(char** s);
-extern bool S(char** s);
+extern Node R(char* s);
+extern Node A(char* s);
+extern Node B(char* s);
+extern Node C(char* s);
+extern Node D(char* s);
 
-extern bool wrap(char** s);
+extern bool wrap(char* s);
 
 #endif

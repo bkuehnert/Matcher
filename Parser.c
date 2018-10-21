@@ -8,10 +8,16 @@
  * Grammar spec
  * <R> -> <T><S>
  * <T> -> <F><T>
- * <S> -> '|'<R>|e
+ * <S> -> '|'<R><S>|e
  * <F> -> <B><C>
  * <C> -> '*'<C>|e
  * <B> -> char | (<R>)
+ *
+ * <R> -> <A><B>
+ * <B> -> '|'<R> | e
+ * <A> -> <C><D>
+ * <D> -> <A> | e
+ * <C> -> (<R>) | char
  */
 
 bool match(char** s, char token)
@@ -39,137 +45,51 @@ char lookahead(char** s)
 	return *s[0];
 }
 
-bool wrap(char** s)
+bool wrap(char* s)
 {
 	if(R(s)) {
-		if(*s[0] == '\0') return true;
-		printf("token %c is dangling\n",*s[0]);
+		if(s[0] == '\0') return true;
+		printf("token %c is dangling\n",s[0]);
 		return false;
 	}
 	return false;
 }
 
-bool R(char** s)
+Node R(char* input)
 {
-	char* original = *s;
-	if(!T(s)){
-		*s = original;
-		return 0;	
-	}
-	if(!S(s)) {
-		*s = original;
-		return 0;
-	}
-	return 1;
+	Node n1 = A(input);
+	Node n2 = B(input);
+	if(n1 == NULL || n2 == NULL) return NULL;
+
+	Node out = new_Node(false, 'A');
+	tree_addChild(out, n1);
+	tree_addChild(out, n2);
+
+	return out;
 }
 
-bool T(char** s)
+Node A(char* input)
 {
-	char* original = *s;
-	if(lookahead(s) == '(' || isInAlphabet(lookahead(s))) {
-		if(!F(s)) {
-			*s = original;
-			return 0;
-		}
-		if(!T(s)) {
-			*s = original;
-			return 0;
-		} 
-		printf("<T>--><F><T> matched\n");
-		return 1;
-	}
-	else {
-		return 1;
-	}
-	return 0;
+	Node n1 = A(input);
+	Node n2 = B(input);
+	if(n1 == NULL || n2 == NULL) return NULL;
+
+	Node out = new_Node(false, 'A');
+	tree_addChild(out, n1);
+	tree_addChild(out, n2);
 }
 
-bool S(char** s)
+Node B(char* input)
 {
-	char* original = *s;
-	if(lookahead(s) == '|') {
-		if(!match(s, '|')) {
-			*s = original;
-			return 0;
-		}
-		if(!R(s)) {
-			*s = original;
-			return 0;
-		}
+	if(lookahead(input) == '|') {
+		Node n1 = R(input);
+		Node out = new_Node(false, 'B');
+		tree_addChild(out, n1);
+		return out;
 	}
-	else {
-		return 1;
-	}
-	return 0;
-}
-
-bool F(char** s)
-{
-	char* original = *s;
-	if(!B(s)) {
-		*s = original;
-		return 0;
-	}
-	if(!C(s)) {
-		*s = original;
-		return 0;
-	}
-	printf("<F>--><B><C> matched\n");
-	return 1;
-}
-
-bool C(char** s)
-{
-	char* original = *s;
-	//printf("*s[0] = %c\n",*s[0]);
-	//printf("lookahead(s) = %c\n", lookahead(s));
-	//printf("lookeahed(s) == '*': %d\n", lookahead(s) == '*');
-	if(lookahead(s) == '*') {
-		if(!match(s, '*')) {
-			*s = original;
-			return 0;
-		}
-		if(!C(s)) {
-			*s = original;
-			return 0;
-		}
-		printf("<C>-->*<C> matched\n");
-		return 1;
-	}
-	else {
-		printf("<C>-->e matched\n");
-		return 1;
-	}
-	return 0;
-}
-
-bool B(char** s)
-{
-	char* original = *s;
-	if(isInAlphabet(lookahead(s))) {
-		if(!match(s, **s)) {
-			*s = original;
-			return 0;
-		}
-		printf("<B>-->char matched\n");
-		return 1;
-	}
-	if(lookahead(s)=='(') {
-		if(!match(s, '(')) {
-			*s = original;
-			return 0;
-		}
-		if(!R(s)) {
-			*s = original;
-			return 0;
-		}
-		if(!match(s,')')) {
-			*s = original;
-			return 0;
-		}
-		printf("<B>-->(<R>) matched\n");
-		return 1;
-	}
-	return 0;
+	Node eps = new_Node(true, 'e');
+	Node out = new_Node(false, 'B');
+	tree_addChild(out,eps);
+	return out;
 }
 
