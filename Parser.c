@@ -16,8 +16,14 @@
  * <R> -> <A><B>
  * <B> -> '|'<R> | e
  * <A> -> <C><D>
- * <D> -> <A> | e
+ * <D> -> '.'<A> | e
  * <C> -> (<R>) | char
+ *
+ * C -> C . B | B
+ * C -> B . C | B
+ * C -> DE
+ * E .C | e
+ *
  */
 
 bool match(char** s, char token)
@@ -45,11 +51,11 @@ char lookahead(char** s)
 	return *s[0];
 }
 
-bool wrap(char* s)
+bool wrap(char** s)
 {
-	if(R(s)) {
-		if(s[0] == '\0') return true;
-		printf("token %c is dangling\n",s[0]);
+	if(R(*s)!= NULL) {
+		if(*s[0] == '\0') return true;
+		printf("token %c is dangling\n",*s[0]);
 		return false;
 	}
 	return false;
@@ -70,19 +76,22 @@ Node R(char* input)
 
 Node A(char* input)
 {
-	Node n1 = A(input);
-	Node n2 = B(input);
+	Node n1 = C(input);
+	Node n2 = D(input);
 	if(n1 == NULL || n2 == NULL) return NULL;
 
-	Node out = new_Node(false, 'A');
+	Node out = new_Node(false, 'C');
 	tree_addChild(out, n1);
 	tree_addChild(out, n2);
+	return out;
 }
 
 Node B(char* input)
 {
-	if(lookahead(input) == '|') {
+	if(lookahead(&input) == '|') {
+		match(&input, '|');
 		Node n1 = R(input);
+		if(n1 == NULL) return NULL;
 		Node out = new_Node(false, 'B');
 		tree_addChild(out, n1);
 		return out;
@@ -93,3 +102,45 @@ Node B(char* input)
 	return out;
 }
 
+Node C(char* input)
+{
+	if(lookahead(&input) == '(') {
+		match(&input, '(');
+		Node n1 = R(input);
+		if(n1 == NULL) return NULL;
+		printf("char here %c\n",*input);
+		if(!match(&input,')')) return NULL;
+		Node out = new_Node(false, 'C');
+		tree_addChild(out, n1);
+		return out;
+	}
+	else {
+		for(int i = 97; i < 123; i++) {
+			if(match(&input, i)) {
+				Node n1 = new_Node(true, (char) i);
+				Node out = new_Node(false, 'C');
+				tree_addChild(out, n1);
+				return out;
+			}
+		}
+		return NULL;
+	}
+	return NULL;
+}
+
+Node D(char* input)
+{
+	if(lookahead(&input) == '.') {
+		match(&input, '.');
+		Node n1 = A(input);
+		if(n1 == NULL) return NULL;
+		Node out = new_Node(false, 'D');
+		tree_addChild(out, n1);
+		return out;
+	}
+	else {
+		Node out = new_Node(false, 'D');
+		tree_addChild(out, new_Node(true, 'e'));
+		return out;
+	}
+}
