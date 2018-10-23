@@ -1,5 +1,6 @@
 #include "NFA.h"
 #include "RE_NFA.h"
+#include "Parser.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -48,7 +49,6 @@ int main(void)
 	test_nfa(final);
 
 	NFA_free(final);
-	*/
 
 	NFA this = create_Union(create_Concat(create_Closure(create_Atomic('1')),create_Atomic('0')),create_Closure(create_Concat(create_Concat(create_Atomic('1'),create_Closure(create_Atomic('1'))),create_Atomic('0'))));
 
@@ -57,4 +57,26 @@ int main(void)
 	test_nfa(final);
 
 	NFA_free(final);
+	*/
+
+	/*
+	char input[1000];
+	char* copy;
+
+	while(fgets(input, 999, stdin)!=NULL) {
+		copy = input;
+		if(R(&copy))	
+			printf("this is a regex\n");
+		else
+			printf("this is not a regex\n");
+	}*/
+
+	char* input ="(a)";
+	if(wrap(&input))	
+		printf("this is a regex\n");
+	else
+		printf("this is not a regex\n");
+
+
+	return 0;
 }
