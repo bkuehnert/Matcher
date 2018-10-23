@@ -20,6 +20,7 @@ struct TREE_NODE
 typedef struct TREE_NODE* Node;
 
 extern Node new_Node(bool terminal, char c);
-extern void Node_addNewChild(Node parent, bool terminal, char c);
+extern void tree_addNewChild(Node parent, bool terminal, char c);
+extern void tree_addChild(Node parent, Node child);
 
 #endif
