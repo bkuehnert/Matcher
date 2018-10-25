@@ -15,6 +15,6 @@ extern Node B(char** s);
 extern Node C(char** s);
 extern Node D(char** s);
 
-extern bool wrap(char** s);
+extern Node wrap(char** s);
 
 #endif

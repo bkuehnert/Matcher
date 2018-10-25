@@ -51,14 +51,15 @@ char lookahead(char** s)
 	return *s[0];
 }
 
-bool wrap(char** s)
+Node wrap(char** s)
 {
-	if(R(s)!= NULL) {
-		if(*s[0] == '\0') return true;
+	Node out = R(s);
+	if(out != NULL) {
+		if(*s[0] == '\0') return out;
 		printf("token %c is dangling\n",*s[0]);
-		return false;
+		return NULL;
 	}
-	return false;
+	return out;
 }
 
 Node R(char** input)
@@ -67,7 +68,7 @@ Node R(char** input)
 	Node n2 = B(input);
 	if(n1 == NULL || n2 == NULL) return NULL;
 
-	Node out = new_Node(false, 'A');
+	Node out = new_Node(false, 'R');
 	tree_addChild(out, n1);
 	tree_addChild(out, n2);
 
