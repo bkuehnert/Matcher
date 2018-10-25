@@ -53,7 +53,7 @@ char lookahead(char** s)
 
 bool wrap(char** s)
 {
-	if(R(*s)!= NULL) {
+	if(R(s)!= NULL) {
 		if(*s[0] == '\0') return true;
 		printf("token %c is dangling\n",*s[0]);
 		return false;
@@ -61,7 +61,7 @@ bool wrap(char** s)
 	return false;
 }
 
-Node R(char* input)
+Node R(char** input)
 {
 	Node n1 = A(input);
 	Node n2 = B(input);
@@ -74,7 +74,7 @@ Node R(char* input)
 	return out;
 }
 
-Node A(char* input)
+Node A(char** input)
 {
 	Node n1 = C(input);
 	Node n2 = D(input);
@@ -86,10 +86,10 @@ Node A(char* input)
 	return out;
 }
 
-Node B(char* input)
+Node B(char** input)
 {
-	if(lookahead(&input) == '|') {
-		match(&input, '|');
+	if(lookahead(input) == '|') {
+		match(input, '|');
 		Node n1 = R(input);
 		if(n1 == NULL) return NULL;
 		Node out = new_Node(false, 'B');
@@ -102,21 +102,21 @@ Node B(char* input)
 	return out;
 }
 
-Node C(char* input)
+Node C(char** input)
 {
-	if(lookahead(&input) == '(') {
-		match(&input, '(');
+	if(lookahead(input) == '(') {
+		match(input, '(');
 		Node n1 = R(input);
 		if(n1 == NULL) return NULL;
-		printf("char here %c\n",*input);
-		if(!match(&input,')')) return NULL;
+		printf("char here %c\n",**input);
+		if(!match(input,')')) return NULL;
 		Node out = new_Node(false, 'C');
 		tree_addChild(out, n1);
 		return out;
 	}
 	else {
 		for(int i = 97; i < 123; i++) {
-			if(match(&input, i)) {
+			if(match(input, i)) {
 				Node n1 = new_Node(true, (char) i);
 				Node out = new_Node(false, 'C');
 				tree_addChild(out, n1);
@@ -128,10 +128,10 @@ Node C(char* input)
 	return NULL;
 }
 
-Node D(char* input)
+Node D(char** input)
 {
-	if(lookahead(&input) == '.') {
-		match(&input, '.');
+	if(lookahead(input) == '.') {
+		match(input, '.');
 		Node n1 = A(input);
 		if(n1 == NULL) return NULL;
 		Node out = new_Node(false, 'D');

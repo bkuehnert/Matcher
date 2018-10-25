@@ -9,11 +9,11 @@
 
 extern bool match(char** s, char token);
 
-extern Node R(char* s);
-extern Node A(char* s);
-extern Node B(char* s);
-extern Node C(char* s);
-extern Node D(char* s);
+extern Node R(char** s);
+extern Node A(char** s);
+extern Node B(char** s);
+extern Node C(char** s);
+extern Node D(char** s);
 
 extern bool wrap(char** s);
 
