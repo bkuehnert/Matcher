@@ -34,45 +34,9 @@ void test_nfa(NFA nfa)
 	printf("\n");
 }
 
-int main(void)
+int main(int argc, char *argv[])
 {
 	/*
-	NFA atomA = create_Atomic('a');
-	NFA atomB = create_Atomic('b');
-	NFA concatAB = create_Concat(atomA, atomB);
-	NFA atomC = create_Atomic('c');
-	NFA closeC = create_Closure(atomC);
-
-	NFA this = create_Union(concatAB, closeC);
-
-	NFA final = NFA_removeEpsilon(this);
-	final->description="matches ab|c*";
-
-	test_nfa(final);
-
-	NFA_free(final);
-
-	NFA this = create_Union(create_Concat(create_Closure(create_Atomic('1')),create_Atomic('0')),create_Closure(create_Concat(create_Concat(create_Atomic('1'),create_Closure(create_Atomic('1'))),create_Atomic('0'))));
-
-	NFA final = NFA_removeEpsilon(this);
-
-	test_nfa(final);
-
-	NFA_free(final);
-	*/
-
-	/*
-	char input[1000];
-	char* copy;
-
-	while(fgets(input, 999, stdin)!=NULL) {
-		copy = input;
-		if(R(&copy))	
-			printf("this is a regex\n");
-		else
-			printf("this is not a regex\n");
-	}*/
-
 	char* input ="(a|b)*";
 	Node out = wrap(&input);
 	if(out != NULL)	{
@@ -86,6 +50,41 @@ int main(void)
 	else
 		printf("this is not a regex\n");
 
+	*/
+	if(argc != 3) {
+		printf("2 arguments required.\n");
+		abort();
+	}
+	
+	Node out = wrap(&argv[1]);
+	if(out == NULL) {
+		printf("Invalid regex, try again\n");
+		abort();
+	}
 
+	NFA nfa = NFA_removeEpsilon(build_R(out));
+
+	FILE* fp;
+	int i = 0;
+	char buffer[128];
+
+	fp = fopen(argv[2],"r");
+	if(fp == NULL) {
+		printf("Unknown file. \n");
+		abort();
+	}
+
+	while(fgets(buffer, 128, fp) != NULL) {
+		char copy[128];
+		strcpy(copy, buffer);
+		strtok(copy, "\n");
+		i++;
+		if(NFA_execute(nfa,copy)) {
+			printf("%3d: %s\n",i,copy);
+		}
+		NFA_reset(nfa);
+	}
+
+	fclose(fp);	
 	return 0;
 }
