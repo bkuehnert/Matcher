@@ -1,5 +1,7 @@
 #include "NFA.h"
 #include "RE_NFA.h"
+#include "Tree.h"
+#include "Eval.h"
 #include "Parser.h"
 #include <string.h>
 #include <stdio.h>
@@ -71,9 +73,16 @@ int main(void)
 			printf("this is not a regex\n");
 	}*/
 
-	char* input ="(a)";
-	if(wrap(&input))	
+	char* input ="(a)*";
+	Node out = wrap(&input);
+	if(out != NULL)	{
 		printf("this is a regex\n");
+		tree_print(out);
+		NFA eNFA = build_R(out);
+		NFA final = NFA_removeEpsilon(eNFA);
+		NFA_print(final);
+		test_nfa(final);
+	}
 	else
 		printf("this is not a regex\n");
 
