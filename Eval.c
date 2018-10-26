@@ -29,15 +29,13 @@ NFA build_A(Node root) {
 
 NFA build_C(Node root) {
 	if(root->children[0]->c == 'R') {
+//		return build_R(root->children[0]);
+		if(root->children[1]->children[0]->c == '*') {
+			return create_Closure(build_R(root->children[0]));
+		}
 		return build_R(root->children[0]);
 	}
-	printf("building atomic of %c\n",root->children[0]->c);
-	return create_Atomic(root->children[0]->c);
+	if(root->children[1]->children[0]->c == 'e')
+		return create_Atomic(root->children[0]->c);
+	return create_Closure(create_Atomic(root->children[0]->c));
 }
-
-
-
-
-
-
-
