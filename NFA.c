@@ -147,6 +147,10 @@ NFA_removeEpsilon(NFA nfa)
 		for(int j = 1; j<128; j++)
 			if(Set_nonEmpty(nfa->trans_table[i][j]))
 				Set_union(important, nfa->trans_table[i][j]);
+	Set_print(important);
+	for(int i = 0; i<nfa->num_states; i++) {
+		Set_print(closure[i]);
+	}
 
 	NFA ret = new_NFA(nfa->num_states, "");
 
@@ -154,10 +158,15 @@ NFA_removeEpsilon(NFA nfa)
 		if(Set_in(important,i)) {
 			for(int j = 0; j < SIZE; j++) {
 				if(Set_in(closure[i],j) && i!=j) {
+					printf("transfering transitions from %d to %d",j,i);
 					for(int k = 1; k<128; k++)
 						Set_union(ret->trans_table[i][k], nfa->trans_table[j][k]);
 					if(nfa->accept_table[j]) ret->accept_table[i] = true;
 				}
+			}
+			for(int j = 1; j < 128; j++) {
+				Set_union(ret->trans_table[i][j], nfa->trans_table[i][j]);
+				if(nfa->accept_table[i]) ret->accept_table[i] = true;
 			}
 		}
 	}
@@ -190,7 +199,6 @@ NFA_removeEpsilon(NFA nfa)
 	NFA_free(nfa);
 
 	return compressed;
-
 }
 
 
