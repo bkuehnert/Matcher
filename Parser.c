@@ -81,7 +81,7 @@ Node A(char** input)
 	Node n2 = D(input);
 	if(n1 == NULL || n2 == NULL) return NULL;
 
-	Node out = new_Node(false, 'C');
+	Node out = new_Node(false, 'A');
 	tree_addChild(out, n1);
 	tree_addChild(out, n2);
 	return out;
