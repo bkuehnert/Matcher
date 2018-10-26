@@ -73,7 +73,7 @@ int main(void)
 			printf("this is not a regex\n");
 	}*/
 
-	char* input ="(a)*";
+	char* input ="(a|b)*";
 	Node out = wrap(&input);
 	if(out != NULL)	{
 		printf("this is a regex\n");
