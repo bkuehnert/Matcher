@@ -65,9 +65,14 @@ Node wrap(char** s)
 
 Node R(char** input)
 {
+	printf("Parsing R\n");
 	Node n1 = A(input);
 	Node n2 = B(input);
-	if(n1 == NULL || n2 == NULL) return NULL;
+	if(n1 == NULL || n2 == NULL) {
+		if(n1 == NULL) printf("A null");
+		if(n2 == NULL) printf("B null");
+		return NULL;
+	}
 
 	Node out = new_Node(false, 'R');
 	tree_addChild(out, n1);
@@ -78,6 +83,7 @@ Node R(char** input)
 
 Node A(char** input)
 {
+	printf("Parsing A\n");
 	Node n1 = C(input);
 	Node n2 = D(input);
 	if(n1 == NULL || n2 == NULL) return NULL;
@@ -90,6 +96,7 @@ Node A(char** input)
 
 Node B(char** input)
 {
+	printf("Parsing B\n");
 	if(lookahead(input) == '|') {
 		match(input, '|');
 		Node n1 = R(input);
@@ -106,29 +113,26 @@ Node B(char** input)
 
 Node C(char** input)
 {
+	printf("Parsing C\n");
 	if(lookahead(input) == '(') {
 		match(input, '(');
 		Node n1 = R(input);
 		if(n1 == NULL) return NULL;
-<<<<<<< HEAD
-		printf("char here %c\n",*input);
-		if(!match(&input,')')) return NULL;
+		if(!match(input,')')) return NULL;
 		Node n2 = E(input);
 		if(n2 == NULL) return NULL;
-=======
-		printf("char here %c\n",**input);
 		if(!match(input,')')) return NULL;
->>>>>>> 9bc8b1833058627bdd2b7f25fde320664bf0eb04
 		Node out = new_Node(false, 'C');
 		tree_addChild(out, n1);
 		tree_addChild(out, n2);
 		return out;
 	}
 	else {
+	printf("Parsing C(not paren)\n");
 		for(int i = 97; i < 123; i++) {
 			if(match(input, i)) {
 				Node n1 = new_Node(true, (char) i);
-				Node n2 = C(input);
+				Node n2 = E(input);
 				Node out = new_Node(false, 'C');
 				tree_addChild(out, n1);
 				tree_addChild(out, n2);
@@ -142,6 +146,7 @@ Node C(char** input)
 
 Node D(char** input)
 {
+	printf("Parsing D\n");
 	if(lookahead(input) == '.') {
 		match(input, '.');
 		Node n1 = A(input);
@@ -157,11 +162,11 @@ Node D(char** input)
 	}
 }
 
-Node E(char* input)
+Node E(char** input)
 {
 	Node out = new_Node('E',false);
-	if(lookahead(&input) == '*') {
-		match(&input, '*');
+	if(lookahead(input) == '*') {
+		match(input, '*');
 		tree_addChild(out, new_Node('*',true));
 		return out;
 	}

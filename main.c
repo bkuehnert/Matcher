@@ -73,7 +73,7 @@ int main(void)
 			printf("this is not a regex\n");
 	}*/
 
-	char* input ="(a.c)";
+	char* input ="(a|b)";
 	Node out = wrap(&input);
 	if(out != NULL)	{
 		printf("this is a regex\n");
@@ -84,8 +84,10 @@ int main(void)
 		NFA_print(final);
 		test_nfa(final);
 	}
-	else
+	else{
+		tree_print(out);
 		printf("this is not a regex\n");
+	}
 
 
 	return 0;
