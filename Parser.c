@@ -30,7 +30,6 @@
 bool match(char** s, char token)
 {
 	if(*s[0]==token) {
-		printf("parsed token %c \n",*s[0]);
 		*s+=1;
 		return true;
 	}
