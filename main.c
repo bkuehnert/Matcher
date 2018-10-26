@@ -72,7 +72,7 @@ int main(void)
 	}*/
 
 	char* input ="(a)";
-	if(wrap(&input))	
+	if(wrap(&input))
 		printf("this is a regex\n");
 	else
 		printf("this is not a regex\n");
