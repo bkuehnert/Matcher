@@ -17,7 +17,8 @@
  * <B> -> '|'<R> | e
  * <A> -> <C><D>
  * <D> -> '.'<A> | e
- * <C> -> (<R>) | char
+ * <C> -> (<R>)<E> | char<E>
+ * <E> -> '*'|e
  *
  * C -> C . B | B
  * C -> B . C | B
@@ -110,16 +111,22 @@ Node C(char* input)
 		if(n1 == NULL) return NULL;
 		printf("char here %c\n",*input);
 		if(!match(&input,')')) return NULL;
+		Node n2 = E(input);
+		if(n2 == NULL) return NULL;
 		Node out = new_Node(false, 'C');
 		tree_addChild(out, n1);
+		tree_addChild(out, n2);
 		return out;
 	}
 	else {
 		for(int i = 97; i < 123; i++) {
 			if(match(&input, i)) {
+				printf("char here:: %c", *input);
 				Node n1 = new_Node(true, (char) i);
+				Node n2 = C(input);
 				Node out = new_Node(false, 'C');
 				tree_addChild(out, n1);
+				tree_addChild(out, n2);
 				return out;
 			}
 		}
@@ -143,4 +150,16 @@ Node D(char* input)
 		tree_addChild(out, new_Node(true, 'e'));
 		return out;
 	}
+}
+
+Node E(char* input)
+{
+	Node out = new_Node('E',false);
+	if(lookahead(&input) == '*') {
+		match(&input, '*');
+		tree_addChild(out, new_Node('*',true));
+		return out;
+	}
+	tree_addChild(out, new_Node('e',true));
+	return out;
 }
