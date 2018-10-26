@@ -52,30 +52,31 @@ char lookahead(char** s)
 	return *s[0];
 }
 
-bool wrap(char** s)
+Node wrap(char** s)
 {
-	if(R(*s)!= NULL) {
-		if(*s[0] == '\0') return true;
+	Node out = R(s);
+	if(out != NULL) {
+		if(*s[0] == '\0') return out;
 		printf("token %c is dangling\n",*s[0]);
-		return false;
+		return NULL;
 	}
-	return false;
+	return out;
 }
 
-Node R(char* input)
+Node R(char** input)
 {
 	Node n1 = A(input);
 	Node n2 = B(input);
 	if(n1 == NULL || n2 == NULL) return NULL;
 
-	Node out = new_Node(false, 'A');
+	Node out = new_Node(false, 'R');
 	tree_addChild(out, n1);
 	tree_addChild(out, n2);
 
 	return out;
 }
 
-Node A(char* input)
+Node A(char** input)
 {
 	Node n1 = C(input);
 	Node n2 = D(input);
@@ -87,10 +88,10 @@ Node A(char* input)
 	return out;
 }
 
-Node B(char* input)
+Node B(char** input)
 {
-	if(lookahead(&input) == '|') {
-		match(&input, '|');
+	if(lookahead(input) == '|') {
+		match(input, '|');
 		Node n1 = R(input);
 		if(n1 == NULL) return NULL;
 		Node out = new_Node(false, 'B');
@@ -103,16 +104,21 @@ Node B(char* input)
 	return out;
 }
 
-Node C(char* input)
+Node C(char** input)
 {
-	if(lookahead(&input) == '(') {
-		match(&input, '(');
+	if(lookahead(input) == '(') {
+		match(input, '(');
 		Node n1 = R(input);
 		if(n1 == NULL) return NULL;
+<<<<<<< HEAD
 		printf("char here %c\n",*input);
 		if(!match(&input,')')) return NULL;
 		Node n2 = E(input);
 		if(n2 == NULL) return NULL;
+=======
+		printf("char here %c\n",**input);
+		if(!match(input,')')) return NULL;
+>>>>>>> 9bc8b1833058627bdd2b7f25fde320664bf0eb04
 		Node out = new_Node(false, 'C');
 		tree_addChild(out, n1);
 		tree_addChild(out, n2);
@@ -120,8 +126,7 @@ Node C(char* input)
 	}
 	else {
 		for(int i = 97; i < 123; i++) {
-			if(match(&input, i)) {
-				printf("char here:: %c", *input);
+			if(match(input, i)) {
 				Node n1 = new_Node(true, (char) i);
 				Node n2 = C(input);
 				Node out = new_Node(false, 'C');
@@ -135,10 +140,10 @@ Node C(char* input)
 	return NULL;
 }
 
-Node D(char* input)
+Node D(char** input)
 {
-	if(lookahead(&input) == '.') {
-		match(&input, '.');
+	if(lookahead(input) == '.') {
+		match(input, '.');
 		Node n1 = A(input);
 		if(n1 == NULL) return NULL;
 		Node out = new_Node(false, 'D');

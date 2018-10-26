@@ -22,5 +22,7 @@ typedef struct TREE_NODE* Node;
 extern Node new_Node(bool terminal, char c);
 extern void tree_addNewChild(Node parent, bool terminal, char c);
 extern void tree_addChild(Node parent, Node child);
+extern void tree_print_level(Node parent, int n);
+extern void tree_print(Node parent);
 
 #endif

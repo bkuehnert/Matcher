@@ -16,12 +16,26 @@ Node new_Node(bool terminal, char c)
 void tree_addNewChild(Node parent, bool terminal, char c)
 {
 	Node ret = new_Node(terminal, c);
-	parent->children[parent->num_children] = ret;
+	parent->children[parent->num_children++] = ret;
 }
 
 void tree_addChild(Node parent, Node child)
 {
-	parent->children[parent->num_children] = child;
+	parent->children[parent->num_children++] = child;
 }
 
 
+void tree_print_level(Node parent, int n)
+{
+	if(parent == NULL) return;
+
+	for(int i =0; i<n;i++) printf(" ");
+	printf("%c\n",parent->c);
+	for(int i = 0; i < parent->num_children; i++)
+		tree_print_level(parent->children[i], n+1);
+}
+
+void tree_print(Node parent)
+{
+	tree_print_level(parent, 0);
+}
