@@ -14,6 +14,7 @@ extern Node A(char** s);
 extern Node B(char** s);
 extern Node C(char** s);
 extern Node D(char** s);
+extern Node E(char** s);
 
 extern Node wrap(char** s);
 
